@@ -1,0 +1,13 @@
+**/node_modules
+**/.venv
+**/__pycache__
+**/*.pyc
+backend/data
+data
+*.db
+.git
+.gitignore
+*.md
+frontend/dist
+backend/static
+/tmp

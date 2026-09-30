@@ -1,0 +1,26 @@
+services:
+  pooling:
+    build: .
+    image: sequencing-pooling-workbench:latest
+    container_name: sequencing-pooling-workbench
+    ports:
+      # 宿主机端口:容器端口。修改左侧端口即可更换访问端口。
+      - "${WEB_PORT:-8000}:8000"
+    environment:
+      # 容器内固定监听 8000；宿主机访问端口由上面的映射决定。
+      WEB_PORT: "8000"
+      POOL_DB_PATH: /app/data/pooling.db
+      POOL_STATIC_DIR: /app/static
+    volumes:
+      # 持久化 SQLite 数据库文件
+      - pooling-data:/app/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8000/api/health').status==200 else 1)"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+volumes:
+  pooling-data:

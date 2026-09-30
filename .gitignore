@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.db
+
+# Node / frontend
+node_modules/
+frontend/dist/
+
+# Built SPA copied for local FastAPI serving (recreated by Docker / npm build)
+backend/static/
+
+# Runtime data (SQLite lives here in local dev)
+backend/data/
+
+# OS/editor
+.DS_Store
+*.swp
