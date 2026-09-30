@@ -1,0 +1,28 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: pooling-workbench:latest
+    container_name: pooling-workbench
+    ports:
+      - "${WEB_PORT:-8000}:8000"
+    environment:
+      # SQLite 数据库文件（位于持久化卷内）
+      DB_PATH: /data/pooling.db
+      # 如改用其它 SQLAlchemy 连接串可在此覆盖
+      # SQLALCHEMY_URL: sqlite:////data/pooling.db
+      # CP-SAT 最长求解秒数
+      SOLVER_TIME_LIMIT: "30"
+    volumes:
+      - pooling-data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8000/api/health').status==200 else 1)"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+volumes:
+  pooling-data:
